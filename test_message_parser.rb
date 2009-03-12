@@ -1,13 +1,8 @@
 require 'treetop'
 require 'polyglot'
 require 'message'
+require 'node_modules'
 require 'test/unit'
-
-class Treetop::Runtime::SyntaxNode
-  def interpret
-    elements.map {|e| e.interpret }.join if nonterminal?()
-  end
-end
 
 class TestMessageParser < Test::Unit::TestCase
   def setup

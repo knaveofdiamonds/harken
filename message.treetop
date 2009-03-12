@@ -1,0 +1,41 @@
+grammar Message
+  rule message
+    expression+ {
+      def interpret
+        Regexp.compile(elements.map {|e| e.interpret }.join)
+      end
+    }
+  end
+
+  rule expression
+    string / identifier / optional
+  end
+
+  rule string
+    [^><\[\]]+ {
+      def interpret
+        Regexp.escape(text_value)
+      end
+    }
+  end
+
+  rule identifier
+    '<' identifier_value '>'
+  end
+
+  rule identifier_value
+    [a-zA-Z_] [a-zA-Z_0-9 ]* {
+      def interpret
+        "(.*)"
+      end
+    }
+  end  
+
+  rule optional
+    "[" expression+ "]" {
+      def interpret
+        "(?:" + elements.map {|e| e.interpret }.join + ")?"
+      end
+    }
+  end
+end

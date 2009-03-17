@@ -1,19 +1,28 @@
 grammar Message
   rule message
     expression+ {
-      def interpret
-        Regexp.compile(elements.map {|e| e.interpret }.join)
+      def interpret(vars=[])
+        Regexp.compile("^" + elements.map {|e| e.interpret(vars) }.join + "$")
       end
     }
   end
 
   rule expression
-    string / identifier / optional
+    word / whitespace / identifier / optional
   end
 
-  rule string
-    [^><\[\]]+ {
-      def interpret
+  # whitespace before optionals will be dealt with separately
+  rule whitespace
+    " "+ !"[" {
+      def interpret(vars=[])
+        "\\ +"
+      end
+    }
+  end
+
+  rule word
+    [^><\[\] ]+ {
+      def interpret(vars=[])
         Regexp.escape(text_value)
       end
     }
@@ -25,16 +34,18 @@ grammar Message
 
   rule identifier_value
     [a-zA-Z_] [a-zA-Z_0-9 ]* {
-      def interpret
+      def interpret(vars=[])
+        vars << text_value.to_sym
         "(.*)"
       end
     }
   end  
 
   rule optional
-    "[" expression+ "]" {
-      def interpret
-        "(?:" + elements.map {|e| e.interpret }.join + ")?"
+   " "* "[" expression+ "]" {
+      def interpret(vars=[])
+        optional_left_space = (text_value.length != text_value.lstrip.length) ? "\\ +" : ""
+        "(?:" + optional_left_space + elements.map {|e| e.interpret(vars) }.join + ")?"
       end
     }
   end

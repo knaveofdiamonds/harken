@@ -31,7 +31,7 @@ class TestMessageParser < Test::Unit::TestCase
     result = @parser.parse("fox[[trot]<dance>]").interpret
     assert_equal "bar", result.match("foxbar")[1]
     assert_equal "bar", result.match("foxtrotbar")[1]
-#    assert ! result.match("fox")
+    assert ! result.match("fox")
   end
 
   def test_strings_are_regexp_escaped

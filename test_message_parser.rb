@@ -28,10 +28,10 @@ class TestMessageParser < Test::Unit::TestCase
   end
 
   def test_composite_expression
-    result = @parser.parse("fox[[trot]<dance>]").interpret
-    assert_equal "bar", result.match("foxbar")[1]
+    result = @parser.parse("fox[trot<dance>]").interpret
+    assert result.match("fox")
     assert_equal "bar", result.match("foxtrotbar")[1]
-    assert ! result.match("fox")
+    assert ! result.match("foxtrot")
   end
 
   def test_strings_are_regexp_escaped
@@ -55,10 +55,17 @@ class TestMessageParser < Test::Unit::TestCase
   end
 
   def test_complicated_expression
-    ast = @parser.parse("[<example>] with <id> [[lots] [of [<nesting>]]]")
-    context = []
-#    assert_equal /^(?:(.*))?\ +with\ +(.*)(?:\ +(?:lots\ +)?(?:of(?:\ +(.*))?)?)?$/, ast.interpret(context)
-#    assert_equal [:example, :id, :nesting], context
+    result = @parser.parse("[<example>] with <id> [[lots] [of [<nesting>]]]").interpret
+    assert_equal "foo", result.match("foo with bar")[1]
+    assert_equal "bar", result.match("foo with bar")[2]
+    assert_equal "bar", result.match("foo with bar lots of")[2]
+    # TODO this does not work because of the double nesting i.e. [[...] [...]] - 
+    # [...] [...] would be fine.
+    # assert_equal "bar", result.match("foo with bar of baz")[2]
+    assert_equal "bar lots", result.match("foo with bar lots lots")[2]
+    assert_equal "wibble", result.match("foo with bar lots lots of wibble")[3]
+    # TODO "with foo" should work as well.
+    assert_equal "foo", result.match(" with foo")[2]
   end
 
   def test_back_to_back_optionals

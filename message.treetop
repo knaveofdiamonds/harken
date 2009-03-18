@@ -36,7 +36,7 @@ grammar Message
     [a-zA-Z_] [a-zA-Z_0-9 ]* {
       def interpret(vars=[])
         vars << text_value.to_sym
-        "(.*)"
+        "(.+?)"
       end
     }
   end  

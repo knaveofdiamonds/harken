@@ -1,6 +1,6 @@
 grammar Message
   rule message
-    expression+ {
+    expression {
       def interpret(vars=[])
         Regexp.compile("^" + elements.map {|e| e.interpret(vars) }.join + "$")
       end
@@ -8,7 +8,7 @@ grammar Message
   end
 
   rule expression
-    word / whitespace / identifier / optional
+    (word / whitespace / identifier / optional)+
   end
 
   # whitespace before optionals will be dealt with separately
@@ -42,7 +42,7 @@ grammar Message
   end  
 
   rule optional
-   " "* "[" expression+ "]" {
+   " "* "[" expression "]" {
       def interpret(vars=[])
         optional_left_space = (text_value.length != text_value.lstrip.length) ? "\\ +" : ""
         "(?:" + optional_left_space + elements.map {|e| e.interpret(vars) }.join + ")?"

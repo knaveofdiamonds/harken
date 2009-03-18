@@ -42,10 +42,28 @@ grammar Message
   end  
 
   rule optional
-   " "* "[" expression "]" {
+    open_optional expression close_optional
+  end
+
+  rule open_optional
+    " "* "[" {
       def interpret(vars=[])
         optional_left_space = (text_value.length != text_value.lstrip.length) ? "\\ +" : ""
-        "(?:" + optional_left_space + elements.map {|e| e.interpret(vars) }.join + ")?"
+        "(?:" + optional_left_space
+      end
+    }
+  end
+
+  rule close_optional
+    "]" " "+ !"[" {
+      def interpret(vars=[])
+        " +)?"
+      end
+    }
+    /
+    "]" {
+      def interpret(vars=[])
+        ")?"
       end
     }
   end

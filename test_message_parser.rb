@@ -40,10 +40,26 @@ class TestMessageParser < Test::Unit::TestCase
     assert ! result.match("drx foo")
   end
 
-  def test_variables_can_be_captured
+  def test_variable_names_can_be_captured
     context = []
     result = @parser.parse("<greeting> <person>").interpret(context)
     assert_equal [:greeting, :person], context
+  end
+
+  # This is kind of arbitrary, but it is important to know how variable values
+  # will be captured
+  def test_variable_captures
+    result = @parser.parse("<a> <b>").interpret
+    assert_equal "foo", result.match("foo bar baz")[1]
+    assert_equal "bar baz", result.match("foo bar baz")[2]
+  end
+
+  def test_optional_identifiers_do_not_displace_capture_order
+    result = @parser.parse("[<a>] <b>").interpret
+    assert_equal nil, result.match("foo")[1]
+    assert_equal "foo", result.match("foo")[2]
+    assert_equal "foo", result.match("foo bar baz")[1]
+    assert_equal "bar baz", result.match("foo bar baz")[2]
   end
 
   # pretend that "hello [world]" was really written "hello[ world]".
@@ -54,18 +70,24 @@ class TestMessageParser < Test::Unit::TestCase
     assert ! result.match("helloworld")
   end
 
+  # pretend that "[hello] world" was really written "[hello ]world".
+  def test_whitespace_can_be_ignored_after_optional
+    result = @parser.parse("[hello] world").interpret
+    assert result.match("hello world")
+    assert result.match("world")
+  end
+
+  # Note that the following assetion would not work because of the double nesting 
+  # i.e. [[...] [...]] - [...] [...] would be fine.
+  # assert_equal "bar", result.match("foo with bar of baz")[2]
   def test_complicated_expression
     result = @parser.parse("[<example>] with <id> [[lots] [of [<nesting>]]]").interpret
     assert_equal "foo", result.match("foo with bar")[1]
     assert_equal "bar", result.match("foo with bar")[2]
     assert_equal "bar", result.match("foo with bar lots of")[2]
-    # TODO this does not work because of the double nesting i.e. [[...] [...]] - 
-    # [...] [...] would be fine.
-    # assert_equal "bar", result.match("foo with bar of baz")[2]
     assert_equal "bar lots", result.match("foo with bar lots lots")[2]
     assert_equal "wibble", result.match("foo with bar lots lots of wibble")[3]
-    # TODO "with foo" should work as well.
-    assert_equal "foo", result.match(" with foo")[2]
+    assert_equal "foo", result.match("with foo")[2]
   end
 
   def test_back_to_back_optionals
@@ -73,6 +95,7 @@ class TestMessageParser < Test::Unit::TestCase
     assert result.match("a")
     assert result.match("a b")
     assert result.match("a c")
+    assert result.match("a b c")
     assert ! result.match("ab")
     assert ! result.match("ac")
   end

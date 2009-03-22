@@ -4,7 +4,11 @@ grammar Message
   rule message
     expression {
       def interpret(vars=[])
-        Regexp.compile("^" + elements.map {|e| e.interpret(vars) }.join + "$")
+        re = Regexp.compile("^" + elements.map {|e| e.interpret(vars) }.join + "$")
+ 	(class << re; self; end).send(:define_method, :variables) do
+ 	  vars
+ 	end
+	re
       end
     }
   end

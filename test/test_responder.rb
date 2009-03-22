@@ -1,9 +1,5 @@
-require 'treetop'
-require 'test/unit'
-require 'polyglot'
-require 'message'
-require 'node_modules'
-require 'responder'
+require File.dirname(__FILE__) + '/helper'
+require 'lib/responder'
 
 class SimpleResponder < Harken::Responder
   listen "test" do

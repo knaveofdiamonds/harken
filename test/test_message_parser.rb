@@ -1,14 +1,8 @@
-require 'treetop'
-require 'polyglot'
-require 'message'
-require 'node_modules'
-require 'test/unit'
-
-include Harken
+require File.dirname(__FILE__) + '/helper'
 
 class TestMessageParser < Test::Unit::TestCase
   def setup
-    @parser = MessageParser.new
+    @parser = Harken::MessageParser.new
   end
 
   def test_string

@@ -19,7 +19,7 @@ class TestMessageParser < Test::Unit::TestCase
 
   def test_identifier
     result = @parser.interpret("<id>")
-    assert_equal "whatever blah", result.match("whatever blah")[1]
+    assert_equal "whatever blah", result.match("whatever blah").id
   end
 
   def test_optional
@@ -32,7 +32,7 @@ class TestMessageParser < Test::Unit::TestCase
   def test_composite_expression
     result = @parser.interpret("fox[trot<dance>]")
     assert result.match("fox")
-    assert_equal "bar", result.match("foxtrotbar")[1]
+    assert_equal "bar", result.match("foxtrotbar").dance
     assert ! result.match("foxtrot")
   end
 
@@ -51,16 +51,16 @@ class TestMessageParser < Test::Unit::TestCase
   # will be captured
   def test_variable_captures
     result = @parser.interpret("<a> <b>")
-    assert_equal "foo", result.match("foo bar baz")[1]
-    assert_equal "bar baz", result.match("foo bar baz")[2]
+    assert_equal "foo", result.match("foo bar baz").a
+    assert_equal "bar baz", result.match("foo bar baz").b
   end
 
   def test_optional_identifiers_do_not_displace_capture_order
     result = @parser.interpret("[<a>] <b>")
-    assert_equal nil, result.match("foo")[1]
-    assert_equal "foo", result.match("foo")[2]
-    assert_equal "foo", result.match("foo bar baz")[1]
-    assert_equal "bar baz", result.match("foo bar baz")[2]
+    assert_equal nil, result.match("foo").a
+    assert_equal "foo", result.match("foo").b
+    assert_equal "foo", result.match("foo bar baz").a
+    assert_equal "bar baz", result.match("foo bar baz").b
   end
 
   # pretend that "hello [world]" was really written "hello[ world]".
@@ -83,12 +83,12 @@ class TestMessageParser < Test::Unit::TestCase
   # assert_equal "bar", result.match("foo with bar of baz")[2]
   def test_complicated_expression
     result = @parser.interpret("[<example>] with <id> [[lots] [of [<nesting>]]]")
-    assert_equal "foo", result.match("foo with bar")[1]
-    assert_equal "bar", result.match("foo with bar")[2]
-    assert_equal "bar", result.match("foo with bar lots of")[2]
-    assert_equal "bar lots", result.match("foo with bar lots lots")[2]
-    assert_equal "wibble", result.match("foo with bar lots lots of wibble")[3]
-    assert_equal "foo", result.match("with foo")[2]
+    assert_equal "foo", result.match("foo with bar").example
+    assert_equal "bar", result.match("foo with bar").id
+    assert_equal "bar", result.match("foo with bar lots of").id
+    assert_equal "bar lots", result.match("foo with bar lots lots").id
+    assert_equal "wibble", result.match("foo with bar lots lots of wibble").nesting
+    assert_equal "foo", result.match("with foo").id
   end
 
   def test_back_to_back_optionals

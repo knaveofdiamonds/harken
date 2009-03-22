@@ -4,11 +4,23 @@ grammar Message
   rule message
     expression {
       def interpret(vars=[])
-        re = Regexp.compile("^" + elements.map {|e| e.interpret(vars) }.join + "$")
- 	(class << re; self; end).send(:define_method, :variables) do
+        regex = Regexp.compile("^" + elements.map {|e| e.interpret(vars) }.join + "$")
+
+	eigenclass = (class << regex; self; end)
+	eigenclass.send(:define_method, :variables) do
  	  vars
  	end
-	re
+
+	eigenclass.send(:define_method, :match) do
+	  match = super
+	  return if match.nil?
+	  vars.each_with_index do |sym, i|
+	    match.instance_eval "def #{sym}\n captures[#{i}]\n end"
+	  end
+	  match
+	end
+
+	regex
       end
     }
   end

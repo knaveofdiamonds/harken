@@ -1,3 +1,5 @@
+module Harken
+
 grammar Message
   rule message
     expression {
@@ -67,4 +69,6 @@ grammar Message
       end
     }
   end
+end
+
 end

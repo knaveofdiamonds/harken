@@ -4,6 +4,8 @@ require 'message'
 require 'node_modules'
 require 'test/unit'
 
+include Harken
+
 class TestMessageParser < Test::Unit::TestCase
   def setup
     @parser = MessageParser.new
@@ -98,5 +100,13 @@ class TestMessageParser < Test::Unit::TestCase
     assert result.match("a b c")
     assert ! result.match("ab")
     assert ! result.match("ac")
+  end
+
+  def test_malformed_messages
+    result = @parser.parse("a [c")
+    assert ! result
+
+    result = @parser.parse("a <c")
+    assert ! result
   end
 end

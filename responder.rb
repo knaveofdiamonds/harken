@@ -13,10 +13,14 @@ module Harken
   # end
   # </code></pre>
   class Responder
+    # Stores every subclass
+    @@responders = []
+
+    # The format parser
+    @@parser = MessageParser.new
+    
     class << self
       attr_reader :listeners
-      @@responders = []
-      @@parser = MessageParser.new
 
       def inherited(klass)
         @@responders << klass

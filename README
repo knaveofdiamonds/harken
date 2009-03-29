@@ -17,9 +17,29 @@ Create a new XMPP client as normal, and then build a bot:
 
     Harken.build_bot(jabber_client).join("some@jabber/room")
 
+Describing what you want to listen for
+--------------------------------------
 
+Harken has its own mini-language to describe what a bot should listen out for. 
+This is just a text string with:
+
+variables: any word between angle brackets - i.e. "<variable>"
+optional phrases: anything between square brackets - i.e. "[optional]"
+
+Variables will be available as methods on the match passed to the action block:
+
+  listen "<variable>" do |match|
+    # can use match.variable
+  end
+
+Optional sections can be nested:
+  
+  listen "some action [with optional [parts]]"
+  
 Dependencies
 ------------
 
 * Treetop - provides parsing support for the language
 * xmpp4r  - ruby xmpp library
+
+Copyright 2009 Roland Swingler.

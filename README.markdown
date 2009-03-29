@@ -40,8 +40,10 @@ How to Describe what you want to listen for
 Harken has its own mini-language to describe what a bot should listen out for. 
 This is just a text string with:
 
-variables: any word between angle brackets - i.e. <code>"&lt;variable&gt;"</code>
-optional phrases: anything between square brackets - i.e. <code>"[optional]"</code>
+variables: 
+  any word between angle brackets - i.e. <code>"&lt;variable&gt;"</code>
+optional phrases: 
+  anything between square brackets - i.e. <code>"[optional]"</code>
 
 Variables will be available as methods on the match passed to the action block:
 

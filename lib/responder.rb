@@ -12,6 +12,11 @@ module Harken
   #   end
   # end
   # </code></pre>
+  #
+  # See the README for a description of how to write a "listen" string
+  #
+  # <strong>Subclasses can implement initialize, but if they do it should not require
+  # parameters.</strong>
   class Responder
     # Stores every subclass
     @@responders = []

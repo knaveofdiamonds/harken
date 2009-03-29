@@ -1,5 +1,4 @@
 require File.dirname(__FILE__) + '/helper'
-require 'lib/responder'
 require File.dirname(__FILE__) + '/dummy_responders'
 
 class TestResponder < Test::Unit::TestCase

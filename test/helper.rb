@@ -5,6 +5,6 @@ require 'polyglot'
 require 'src/message'
 require 'lib/parser_ext'
 require 'lib/bot'
+require 'lib/responder'
 require 'lib/responder_group'
-
 

@@ -1,25 +1,6 @@
 require File.dirname(__FILE__) + '/helper'
 require 'lib/responder'
-
-class SimpleResponder < Harken::Responder
-  listen "test" do
-    "foo"
-  end
-
-  listen "test <variable>" do |m|
-    "value is '#{m.variable}'"
-  end
-end
-
-class DuplicateResponder < Harken::Responder
-  listen "test" do
-    "first"
-  end
-
-  listen "test" do
-    "second"
-  end
-end
+require File.dirname(__FILE__) + '/dummy_responders'
 
 class TestResponder < Test::Unit::TestCase
   def test_simple_responder_responds_to_message
@@ -39,6 +20,6 @@ class TestResponder < Test::Unit::TestCase
   end
 
   def test_all_responders_are_tracked
-    assert_equal [SimpleResponder, DuplicateResponder], Harken::Responder.all_responders
+    assert_equal [SimpleResponder, DuplicateResponder], Harken::Responder.all
   end
 end

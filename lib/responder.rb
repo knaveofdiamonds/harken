@@ -37,7 +37,7 @@ module Harken
       end
       
       # Returns an array with all Responder subclasses.
-      def all_responders 
+      def all
         @@responders
       end
     end

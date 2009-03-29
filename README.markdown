@@ -40,18 +40,18 @@ How to Describe what you want to listen for
 Harken has its own mini-language to describe what a bot should listen out for. 
 This is just a text string with:
 
-variables: any word between angle brackets - i.e. "<variable>"
-optional phrases: anything between square brackets - i.e. "[optional]"
+variables: any word between angle brackets - i.e. <code>"<variable>"</code>
+optional phrases: anything between square brackets - i.e. <code>"[optional]"</code>
 
 Variables will be available as methods on the match passed to the action block:
 
-  listen "<variable>" do |match|
-    # can use match.variable
-  end
+    listen "<variable>" do |match|
+      # can use match.variable
+    end
 
 Optional sections can be nested:
   
-  listen "some action [with optional [parts]]"
+    listen "some action [with optional [parts]]"
   
 Dependencies
 ------------

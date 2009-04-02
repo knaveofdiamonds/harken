@@ -61,6 +61,13 @@ Dependencies
 * Treetop - provides parsing support for the language
 * xmpp4r  - ruby xmpp library
 
+Running tests
+-------------
+
+You can run all the tests with the default rake task. Harken does not require 
+rubygems anywhere, so you may have to set the environment variable 
+RUBYOPT="rubygems".
+
 TODO
 ----
 

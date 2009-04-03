@@ -1,7 +1,7 @@
 # Extensions to Syntax nodes and the treetop-generated parser.
 
 module Harken
-  module PassThroughInterpret
+  module PassThroughInterpret # :nodoc: all
     # Make every node in the syntax tree respond to "interpret"
     def interpret(vars=[])
       elements.map {|e| e.interpret(vars) }.join if nonterminal?

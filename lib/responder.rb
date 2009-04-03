@@ -5,18 +5,16 @@ module Harken
   #
   # A hello world example:
   #
-  # <pre><code>
-  # class Hello < Harken::Responder
-  #   listen "greet <person>" do |m|
-  #     "Hello, #{m.person}!"
-  #   end
-  # end
-  # </code></pre>
+  #     class Hello < Harken::Responder
+  #       listen "greet <person>" do |m|
+  #         "Hello, #{m.person}!"
+  #       end
+  #     end
   #
   # See the README for a description of how to write a "listen" string
   #
-  # <strong>Subclasses can implement initialize, but if they do it should not require
-  # parameters.</strong>
+  # Subclasses can implement initialize, but if they do <b>they should not require
+  # parameters</b>.
   class Responder
     # Stores every subclass
     @@responders = []
@@ -27,14 +25,14 @@ module Harken
     class << self
       attr_reader :listeners
 
-      def inherited(klass)
+      def inherited(klass) # :nodoc:
         @@responders << klass
         klass.class_eval { @listeners = {} }
       end
 
       # Listen for a message and call the given block if it matches the format string.
       #
-      # Raises an exception if the format string could not be parsed successfully
+      # Raises an exception if the format string could not be parsed successfully.
       def listen(format, &block)
         matcher = @@parser.interpret(format)
         raise "Could not listen for '#{format}'" unless matcher

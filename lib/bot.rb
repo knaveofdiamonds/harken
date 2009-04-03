@@ -13,24 +13,16 @@ module Harken
 
     # Creates a new bot. You need to provide some options:
     #
-    # Required
-    # --------
+    # ==== Required
     #
-    # user: 
-    #   User name of the account to log in with
-    # host:
-    #   the XMPP Domain
+    # [+user+:] User name of the account to log in with
+    # [+host+:] the XMPP Domain
+    #   
+    # ==== Optional
     #
-    # Optional
-    # --------
-    #
-    # name:
-    #   the name of the bot (resource in XMPP-speak). If not provided will be 
-    #   the same as user
-    # password:
-    #   account password, if required
-    # conference:
-    #   a default conference server domain
+    # [+name+:] the name of the bot (resource in XMPP-speak). If not provided will be the same as user
+    # [+password+:] account password, if required
+    # [+conference+:] a default conference server domain
     # 
     def initialize(options={})
       [:user, :host, :name, :password, :conference].each do |option|
@@ -43,9 +35,8 @@ module Harken
       @bot_reg_exp = /^\s*#{@name}:?\s+(.*)/
     end
 
-    # Joins a room.
-    #
-    # Takes either a JID, or a room string and optionally a conference server & resource name.
+    # Joins a room. Takes either a JID, or a room string and optionally a conference server
+    # & resource name.
     def join(*args)
       connect unless @connection
       
@@ -55,17 +46,15 @@ module Harken
       @room_clients[id].join(id)
     end
 
-    # Leaves a room.
-    #
-    # Takes either a JID, or a room string and optionally a conference server & resource name.
+    # Leaves a room. Takes either a JID, or a room string and optionally a conference server
+    # & resource name.
     def leave(*args)
       id = jid_from_args(*args)
       @room_clients.delete(id).exit if @room_clients.has_key?(id)
     end
 
-    # Polls the xmpp connection and sleeps for a short while.
-    #
-    # Intended to be used within a daemon loop of some description.
+    # Polls the xmpp connection and sleeps for a short while. Intended to be used within a 
+    # daemon loop of some description.
     def breath(time=10)
       @connection.send(" ")
       sleep time

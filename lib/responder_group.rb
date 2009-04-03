@@ -1,5 +1,5 @@
 module Harken
-  # Allows you to composite Responders into a group.
+  # Allows you to compose Responders into a group.
   class ResponderGroup
     # Creates a new ResponderGroup.
     #
@@ -10,7 +10,7 @@ module Harken
       @responders = klasses.map {|klass| klass.new }
     end
 
-    # Receive a message from the chat room
+    # Receives a message from the chat room
     #
     # Returns an array of replies for the room
     def receive(message)
